@@ -9,26 +9,31 @@ export default function Login() {
   const { toast } = useToast()
   const navigate = useNavigate()
 
-  const [mode, setMode]         = useState('login')  // 'login' | 'register'
-  const [loading, setLoading]   = useState(false)
+  const [mode, setMode] = useState('login') // 'login' | 'register'
+  const [loading, setLoading] = useState(false)
   const [showPass, setShowPass] = useState(false)
-  const [form, setForm]         = useState({ name: '', email: '', password: '', role: 'viewer' })
+  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'viewer' })
 
   const set = (k) => (e) => setForm((p) => ({ ...p, [k]: e.target.value }))
 
   const submit = async (e) => {
     e.preventDefault()
     setLoading(true)
+
     try {
       if (mode === 'login') {
-        await login({ email: form.email, password: form.password })
+        // 🔥 התיקון הקריטי:
+        await login(form.email, form.password)
       } else {
-        await signup(form)
+        // DEMO signup — לא באמת יוצר משתמש
+        await signup(form.email, form.password)
       }
+
       toast(`Welcome${form.name ? ', ' + form.name : ''}!`, 'success')
       navigate('/dashboard')
+
     } catch (err) {
-      toast(err?.response?.data?.message || 'Authentication failed', 'error')
+      toast('Authentication failed', 'error')
     } finally {
       setLoading(false)
     }
