@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Plus, Pencil, Trash2, Search } from 'lucide-react'
 import { useApi } from '@/hooks/useApi'
-import { getClients, createClient, updateClient, deleteClient } from '@/services/api'
 import { useToast } from '@/context/ToastContext'
 import PageHeader from '@/components/ui/PageHeader'
 import Table from '@/components/ui/Table'
@@ -14,11 +13,13 @@ const EMPTY = { name: '', email: '', phone: '', industry: '', status: 'active', 
 
 export default function Clients() {
   const { toast } = useToast()
-  const { data, loading, refetch } = useApi(getClients)
+
+  // אין API אמיתי כרגע → נשתמש ב־useApi בלי פונקציה
+  const { data, loading, refetch } = useApi(() => Promise.resolve([]))
 
   const [search,    setSearch]    = useState('')
   const [modal,     setModal]     = useState(false)
-  const [confirm,   setConfirm]   = useState(null)   // id to delete
+  const [confirm,   setConfirm]   = useState(null)
   const [editing,   setEditing]   = useState(null)
   const [form,      setForm]      = useState(EMPTY)
   const [saving,    setSaving]    = useState(false)
@@ -32,35 +33,18 @@ export default function Clients() {
 
   const save = async (e) => {
     e.preventDefault()
-    setSaving(true)
-    try {
-      if (editing) {
-        await updateClient(editing.id, form)
-        toast('Client updated', 'success')
-      } else {
-        await createClient(form)
-        toast('Client created', 'success')
-      }
-      closeModal()
-      refetch()
-    } catch (err) {
-      toast(err?.response?.data?.message || 'Failed to save', 'error')
-    } finally { setSaving(false) }
+    toast('Client saving disabled (no backend yet)', 'error')
   }
 
   const doDelete = async () => {
-    setDeleting(true)
-    try {
-      await deleteClient(confirm)
-      toast('Client deleted', 'success')
-      setConfirm(null)
-      refetch()
-    } catch { toast('Failed to delete', 'error') }
-    finally { setDeleting(false) }
+    toast('Client deletion disabled (no backend yet)', 'error')
   }
 
   const rows = (data?.data || data || []).filter(
-    (c) => !search || c.name?.toLowerCase().includes(search.toLowerCase()) || c.email?.toLowerCase().includes(search.toLowerCase())
+    (c) =>
+      !search ||
+      c.name?.toLowerCase().includes(search.toLowerCase()) ||
+      c.email?.toLowerCase().includes(search.toLowerCase())
   )
 
   const columns = [
@@ -93,10 +77,21 @@ export default function Clients() {
         <div className="px-5 py-4 border-b border-bg-border flex items-center gap-3">
           <div className="relative flex-1 max-w-xs">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
-            <input className="input pl-8 h-9 text-xs" placeholder="Search clients…" value={search} onChange={(e) => setSearch(e.target.value)} />
+            <input
+              className="input pl-8 h-9 text-xs"
+              placeholder="Search clients…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
         </div>
-        <Table columns={columns} data={rows} loading={loading} emptyMessage="No clients yet — create your first!" />
+
+        <Table
+          columns={columns}
+          data={rows}
+          loading={loading}
+          emptyMessage="No clients yet — create your first!"
+        />
       </div>
 
       {/* Create / Edit Modal */}
@@ -152,3 +147,4 @@ export default function Clients() {
     </div>
   )
 }
+
