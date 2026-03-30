@@ -12,7 +12,6 @@ import {
   Pie,
   Cell
 } from 'recharts'
-import { getDashboard } from '@/services/api'
 import StatCard from '@/components/ui/StatCard'
 import Badge from '@/components/ui/Badge'
 import { formatDate, formatCurrency, formatNumber } from '@/utils/helpers'
@@ -36,16 +35,56 @@ export default function Dashboard() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  // הגנה על הדשבורד
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />
   }
 
+  // DEMO MODE — אין backend
   useEffect(() => {
-    getDashboard()
-      .then((res) => setData(res.data))
-      .catch(console.error)
-      .finally(() => setLoading(false))
+    setTimeout(() => {
+      setData({
+        overview: {
+          totalClients: 24,
+          activeClients: 18,
+          publishedPosts: 98,
+          scheduledPosts: 12,
+          totalLeads: 55,
+          newLeads: 7,
+          conversionRate: 12,
+          totalLeadValue: 15000
+        },
+        monthlyTrend: [
+          { month: 'Jan', count: 20 },
+          { month: 'Feb', count: 25 },
+          { month: 'Mar', count: 30 },
+          { month: 'Apr', count: 28 },
+          { month: 'May', count: 35 }
+        ],
+        breakdowns: {
+          postsByPlatform: {
+            Instagram: 40,
+            Facebook: 25,
+            TikTok: 33,
+            LinkedIn: 12
+          }
+        },
+        recent: {
+          clients: [
+            { id: 1, name: 'Acme Corp', status: 'active', createdAt: Date.now() - 86400000 },
+            { id: 2, name: 'Blue Media', status: 'prospect', createdAt: Date.now() - 172800000 }
+          ],
+          posts: [
+            { id: 1, title: 'New Spring Campaign', platform: 'instagram', status: 'published' },
+            { id: 2, title: 'Brand Awareness Tips', platform: 'tiktok', status: 'scheduled' }
+          ],
+          leads: [
+            { id: 1, name: 'John Doe', source: 'Instagram', status: 'new' },
+            { id: 2, name: 'Sarah Cohen', source: 'Facebook', status: 'qualified' }
+          ]
+        }
+      })
+      setLoading(false)
+    }, 600)
   }, [])
 
   const ov = data?.overview || {}
@@ -304,5 +343,4 @@ function RecentList({ title, icon: Icon, items, loading, renderItem }) {
     </div>
   )
 }
-
 
