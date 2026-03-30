@@ -12,7 +12,7 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (credentials) => {
     const res = await apiLogin(credentials)
-    const { token: tok, user: usr } = res.data
+    const { token: tok, user: usr } = res
     localStorage.setItem('token', tok)
     localStorage.setItem('user', JSON.stringify(usr))
     setToken(tok)
@@ -22,7 +22,7 @@ export function AuthProvider({ children }) {
 
   const signup = useCallback(async (data) => {
     const res = await apiRegister(data)
-    const { token: tok, user: usr } = res.data
+    const { token: tok, user: usr } = res
     localStorage.setItem('token', tok)
     localStorage.setItem('user', JSON.stringify(usr))
     setToken(tok)
@@ -47,3 +47,4 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   return useContext(AuthContext)
 }
+
