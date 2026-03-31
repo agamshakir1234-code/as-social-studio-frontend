@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: "class", // ⬅️ חובה!
+  darkMode: "class",
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
@@ -9,8 +9,6 @@ export default {
         mono: ['"DM Mono"', 'monospace'],
         display: ['"Syne"', 'sans-serif'],
       },
-
-      // במקום צבעים קשיחים → משתמשים ב־CSS variables
       colors: {
         bg: {
           base: "var(--bg-base)",
@@ -29,8 +27,8 @@ export default {
           600: '#4f46e5',
           700: '#4338ca',
         },
+        surface: '#111827',
       },
-
       boxShadow: {
         card: '0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px rgba(99,102,241,0.07)',
         glow: '0 0 20px rgba(99,102,241,0.25)',
@@ -39,3 +37,4 @@ export default {
   },
   plugins: [],
 }
+
