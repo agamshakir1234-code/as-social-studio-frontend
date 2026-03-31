@@ -9,6 +9,12 @@ import Leads from '@/pages/Leads'
 import KPIs from '@/pages/KPIs'
 import Settings from '@/pages/Settings'
 
+// ⬅️ שלב 3 — כאן מוסיפים את initDemo
+import { initDemo } from "@/services/demoData"
+
+// מפעילים את נתוני הדמו פעם אחת כשהאפליקציה נטענת
+initDemo()
+
 export default function App() {
   return (
     <Routes>
