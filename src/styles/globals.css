@@ -26,6 +26,12 @@ body {
   color: var(--text-base);
 }
 
+/* מחלקות Tailwind שמחברות את ה־CSS variables */
+.bg-bg-base { background-color: var(--bg-base) !important; }
+.bg-bg-card { background-color: var(--bg-card) !important; }
+.bg-bg-hover { background-color: var(--bg-hover) !important; }
+.border-bg-border { border-color: var(--bg-border) !important; }
+.text-text-base { color: var(--text-base) !important; }
 
 @layer base {
   * {
@@ -37,7 +43,7 @@ body {
   }
 
   body {
-    @apply bg-bg-base text-slate-200 font-sans antialiased;
+    @apply bg-bg-base text-text-base font-sans antialiased;
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.018'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 
@@ -56,8 +62,8 @@ body {
 
 @layer components {
   .sidebar-link {
-    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm font-medium
-           transition-all duration-200 hover:bg-bg-hover hover:text-slate-100 cursor-pointer;
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-base text-sm font-medium
+           transition-all duration-200 hover:bg-bg-hover hover:text-white cursor-pointer;
   }
 
   .sidebar-link.active {
@@ -76,7 +82,7 @@ body {
 
   .btn-secondary {
     @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-bg-hover hover:bg-slate-700
-           text-slate-300 text-sm font-medium border border-bg-border transition-all duration-200
+           text-text-base text-sm font-medium border border-bg-border transition-all duration-200
            focus:outline-none focus:ring-2 focus:ring-brand-500/30;
   }
 
@@ -86,13 +92,13 @@ body {
   }
 
   .input {
-    @apply w-full px-3.5 py-2.5 rounded-lg bg-bg-base border border-bg-border text-slate-200
+    @apply w-full px-3.5 py-2.5 rounded-lg bg-bg-card border border-bg-border text-text-base
            text-sm placeholder-slate-500 focus:outline-none focus:border-brand-500/60
            focus:ring-2 focus:ring-brand-500/20 transition-all duration-200;
   }
 
   .label {
-    @apply block text-xs font-medium text-slate-400 mb-1.5 uppercase tracking-wide;
+    @apply block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wide;
   }
 
   .table-row {
@@ -100,7 +106,7 @@ body {
   }
 
   .table-cell {
-    @apply px-4 py-3 text-sm text-slate-300;
+    @apply px-4 py-3 text-sm text-text-base;
   }
 
   .table-head {
@@ -112,11 +118,11 @@ body {
   }
 
   .page-title {
-    @apply font-display text-2xl font-bold text-white tracking-tight;
+    @apply font-display text-2xl font-bold text-text-base tracking-tight;
   }
 
   .section-title {
-    @apply text-base font-semibold text-slate-100;
+    @apply text-base font-semibold text-text-base;
   }
 
   .stat-card {
