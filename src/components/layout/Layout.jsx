@@ -7,19 +7,19 @@ export default function Layout() {
   const { logout } = useAuth()
 
   return (
-    <div className="min-h-screen flex bg-bg-base text-white">
+    <div className="min-h-screen flex bg-bg-base text-text-base">
 
       {/* Sidebar */}
       <aside className="w-64 border-r border-bg-border p-5 flex flex-col gap-6 bg-bg-card">
-        <h1 className="text-xl font-bold">AS Social Studio</h1>
+        <h1 className="text-xl font-bold text-text-base">AS Social Studio</h1>
 
         <nav className="flex flex-col gap-2">
-          <NavLink to="/dashboard" className="nav-item">Dashboard</NavLink>
-          <NavLink to="/clients" className="nav-item">Clients</NavLink>
-          <NavLink to="/posts" className="nav-item">Posts</NavLink>
-          <NavLink to="/leads" className="nav-item">Leads</NavLink>
-          <NavLink to="/kpis" className="nav-item">KPIs</NavLink>
-          <NavLink to="/settings" className="nav-item">Settings</NavLink>
+          <NavLink to="/dashboard" className="sidebar-link">Dashboard</NavLink>
+          <NavLink to="/clients" className="sidebar-link">Clients</NavLink>
+          <NavLink to="/posts" className="sidebar-link">Posts</NavLink>
+          <NavLink to="/leads" className="sidebar-link">Leads</NavLink>
+          <NavLink to="/kpis" className="sidebar-link">KPIs</NavLink>
+          <NavLink to="/settings" className="sidebar-link">Settings</NavLink>
         </nav>
 
         <button
@@ -36,10 +36,9 @@ export default function Layout() {
 
         {/* Header */}
         <header className="flex items-center justify-between p-4 border-b border-bg-border bg-bg-card">
-          <h2 className="text-lg font-semibold">Dashboard</h2>
+          <h2 className="text-lg font-semibold text-text-base">Dashboard</h2>
 
           <div className="flex items-center gap-3">
-            {/* 🔥 כאן מופיע ה-ThemeToggle */}
             <ThemeToggle />
           </div>
         </header>
