@@ -1,58 +1,50 @@
-import { useState } from 'react'
-import { Search } from 'lucide-react'
-import { useApi } from '@/hooks/useApi'
-import PageHeader from '@/components/ui/PageHeader'
-import Table from '@/components/ui/Table'
-import Badge from '@/components/ui/Badge'
-import { formatDate, formatNumber } from '@/utils/helpers'
+import { useEffect, useState } from "react"
 
 export default function KPIs() {
-  // אין backend אמיתי כרגע → מחזירים רשימה ריקה
-  const { data, loading } = useApi(() => Promise.resolve([]))
+  const [kpis, setKpis] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  const [search, setSearch] = useState('')
-
-  const rows = (data?.data || data || []).filter(
-    (kpi) =>
-      !search ||
-      kpi.name?.toLowerCase().includes(search.toLowerCase())
-  )
-
-  const columns = [
-    { key: 'name', label: 'KPI', render: (v) => <span className="font-medium text-slate-100">{v}</span> },
-    { key: 'value', label: 'Value', render: (v) => formatNumber(v) },
-    { key: 'status', label: 'Status', render: (v) => <Badge status={v} /> },
-    { key: 'updatedAt', label: 'Updated', render: (v) => formatDate(v) }
-  ]
+  useEffect(() => {
+    setTimeout(() => {
+      setKpis({
+        engagementRate: "4.8%",
+        avgReach: "12,400",
+        monthlyGrowth: "7.2%",
+        topPlatform: "Instagram"
+      })
+      setLoading(false)
+    }, 500)
+  }, [])
 
   return (
-    <div className="flex flex-col gap-6 animate-fade-in">
-      <PageHeader
-        title="KPIs"
-        subtitle={`${rows.length} KPI${rows.length !== 1 ? 's' : ''} total`}
-      />
+    <div className="card p-6">
+      <h2 className="section-title mb-4">KPIs</h2>
 
-      <div className="card">
-        {/* Toolbar */}
-        <div className="px-5 py-4 border-b border-bg-border flex items-center gap-3">
-          <div className="relative flex-1 max-w-xs">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
-            <input
-              className="input pl-8 h-9 text-xs"
-              placeholder="Search KPIs…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+      {loading ? (
+        <p className="text-slate-500">Loading…</p>
+      ) : (
+        <div className="grid grid-cols-2 gap-4">
+          <div className="p-4 border border-bg-border rounded-lg">
+            <p className="text-slate-500 text-xs">Engagement Rate</p>
+            <p className="text-white text-xl font-bold">{kpis.engagementRate}</p>
+          </div>
+
+          <div className="p-4 border border-bg-border rounded-lg">
+            <p className="text-slate-500 text-xs">Average Reach</p>
+            <p className="text-white text-xl font-bold">{kpis.avgReach}</p>
+          </div>
+
+          <div className="p-4 border border-bg-border rounded-lg">
+            <p className="text-slate-500 text-xs">Monthly Growth</p>
+            <p className="text-white text-xl font-bold">{kpis.monthlyGrowth}</p>
+          </div>
+
+          <div className="p-4 border border-bg-border rounded-lg">
+            <p className="text-slate-500 text-xs">Top Platform</p>
+            <p className="text-white text-xl font-bold">{kpis.topPlatform}</p>
           </div>
         </div>
-
-        <Table
-          columns={columns}
-          data={rows}
-          loading={loading}
-          emptyMessage="No KPIs yet — add some metrics!"
-        />
-      </div>
+      )}
     </div>
   )
 }
