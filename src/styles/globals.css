@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* DARK MODE (default) */
+:root.dark {
+  --bg-base: #080c14;
+  --bg-card: #0d1221;
+  --bg-hover: #111827;
+  --bg-border: #1e2a3a;
+  --text-base: #e5e7eb;
+}
+
+/* LIGHT MODE */
+:root.light {
+  --bg-base: #ffffff;
+  --bg-card: #f3f4f6;
+  --bg-hover: #e5e7eb;
+  --bg-border: #d1d5db;
+  --text-base: #111827;
+}
+
+/* שימוש אוטומטי בצבעים */
+body {
+  background-color: var(--bg-base);
+  color: var(--text-base);
+}
+
+
 @layer base {
   * {
     box-sizing: border-box;
