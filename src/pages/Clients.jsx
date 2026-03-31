@@ -34,15 +34,11 @@ export default function Clients() {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (editing) {
-      const updated = demoAPI.update("clients", editing.id, {
-        name: form.name,
-        status: form.status
-      })
+      const updated = demoAPI.update("clients", editing.id, form)
       setClients((prev) => prev.map((c) => (c.id === editing.id ? updated : c)))
     } else {
       const created = demoAPI.create("clients", {
-        name: form.name,
-        status: form.status,
+        ...form,
         createdAt: new Date().toISOString().split("T")[0]
       })
       setClients((prev) => [created, ...prev])
