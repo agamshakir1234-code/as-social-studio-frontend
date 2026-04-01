@@ -1,168 +1,138 @@
-import { useEffect, useState } from "react"
-import { demoAPI } from "@/services/demoData"
-import { Plus, Edit2, Trash2, X } from "lucide-react"
+import { useState } from "react"
+import { Search, Instagram, Facebook, Youtube, MoreHorizontal } from "lucide-react"
+
+const MOCK_CLIENTS = [
+  {
+    id: 1,
+    name: "Urban Fit Studio",
+    industry: "Fitness",
+    status: "Active",
+    platforms: ["Instagram", "Facebook"],
+    monthlyBudget: "$1,800",
+  },
+  {
+    id: 2,
+    name: "GreenLeaf Organics",
+    industry: "Food & Wellness",
+    status: "Onboarding",
+    platforms: ["Instagram"],
+    monthlyBudget: "$1,200",
+  },
+  {
+    id: 3,
+    name: "Nova Tech",
+    industry: "Tech",
+    status: "Paused",
+    platforms: ["Instagram", "YouTube"],
+    monthlyBudget: "$2,500",
+  },
+]
+
+function StatusBadge({ status }) {
+  const map = {
+    Active: "bg-emerald-500/10 text-emerald-300 border-emerald-500/30",
+    Onboarding: "bg-sky-500/10 text-sky-300 border-sky-500/30",
+    Paused: "bg-amber-500/10 text-amber-300 border-amber-500/30",
+  }
+  return (
+    <span className={`badge border ${map[status] || "bg-slate-500/10 text-slate-300 border-slate-500/30"}`}>
+      {status}
+    </span>
+  )
+}
+
+function PlatformIcons({ platforms }) {
+  return (
+    <div className="flex items-center gap-1 text-slate-400">
+      {platforms.includes("Instagram") && <Instagram size={16} />}
+      {platforms.includes("Facebook") && <Facebook size={16} />}
+      {platforms.includes("YouTube") && <Youtube size={16} />}
+    </div>
+  )
+}
 
 export default function Clients() {
-  const [clients, setClients] = useState([])
-  const [search, setSearch] = useState("")
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [modalOpen, setModalOpen] = useState(false)
-  const [editing, setEditing] = useState(null)
-  const [form, setForm] = useState({ name: "", status: "active" })
+  const [query, setQuery] = useState("")
 
-  useEffect(() => {
-    setClients(demoAPI.list("clients"))
-  }, [])
-
-  const openCreate = () => {
-    setEditing(null)
-    setForm({ name: "", status: "active" })
-    setModalOpen(true)
-  }
-
-  const openEdit = (client) => {
-    setEditing(client)
-    setForm({ name: client.name, status: client.status })
-    setModalOpen(true)
-  }
-
-  const handleDelete = (id) => {
-    demoAPI.remove("clients", id)
-    setClients((prev) => prev.filter((c) => c.id !== id))
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (editing) {
-      const updated = demoAPI.update("clients", editing.id, form)
-      setClients((prev) => prev.map((c) => (c.id === editing.id ? updated : c)))
-    } else {
-      const created = demoAPI.create("clients", {
-        ...form,
-        createdAt: new Date().toISOString().split("T")[0]
-      })
-      setClients((prev) => [created, ...prev])
-    }
-    setModalOpen(false)
-  }
-
-  const filtered = clients.filter((c) => {
-    const matchesSearch = c.name.toLowerCase().includes(search.toLowerCase())
-    const matchesStatus = statusFilter === "all" || c.status === statusFilter
-    return matchesSearch && matchesStatus
-  })
+  const filtered = MOCK_CLIENTS.filter((c) =>
+    c.name.toLowerCase().includes(query.toLowerCase())
+  )
 
   return (
-    <div className="card p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="section-title">Clients</h2>
-        <button className="btn-primary flex items-center gap-2" onClick={openCreate}>
-          <Plus size={14} />
-          <span>Add client</span>
+    <div className="space-y-5">
+      <header className="flex items-center justify-between gap-4">
+        <div>
+          <h1 className="page-title">Clients</h1>
+          <p className="text-sm text-slate-400">
+            Manage all brands and businesses connected to Social Engine.
+          </p>
+        </div>
+
+        <button className="btn-primary">
+          + Add client
         </button>
+      </header>
+
+      <div className="card p-4 flex items-center gap-3">
+        <div className="relative flex-1">
+          <Search size={16} className="absolute left-3 top-2.5 text-slate-500" />
+          <input
+            className="input pl-9"
+            placeholder="Search clients by name or industry..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </div>
       </div>
 
-      <div className="flex flex-wrap gap-3 mb-4">
-        <input
-          className="input flex-1 min-w-[180px]"
-          placeholder="Search clients…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      <div className="card overflow-hidden">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="table-row bg-bg-hover/40">
+              <th className="table-head">Client</th>
+              <th className="table-head">Industry</th>
+              <th className="table-head">Status</th>
+              <th className="table-head">Platforms</th>
+              <th className="table-head">Monthly budget</th>
+              <th className="table-head text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((client) => (
+              <tr key={client.id} className="table-row">
+                <td className="table-cell font-medium text-slate-100">
+                  {client.name}
+                </td>
+                <td className="table-cell text-slate-400">
+                  {client.industry}
+                </td>
+                <td className="table-cell">
+                  <StatusBadge status={client.status} />
+                </td>
+                <td className="table-cell">
+                  <PlatformIcons platforms={client.platforms} />
+                </td>
+                <td className="table-cell">
+                  {client.monthlyBudget}
+                </td>
+                <td className="table-cell text-right">
+                  <button className="text-slate-500 hover:text-slate-300">
+                    <MoreHorizontal size={16} />
+                  </button>
+                </td>
+              </tr>
+            ))}
 
-        <select
-          className="input w-[150px]"
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-        >
-          <option value="all">All statuses</option>
-          <option value="active">Active</option>
-          <option value="prospect">Prospect</option>
-          <option value="inactive">Inactive</option>
-        </select>
+            {filtered.length === 0 && (
+              <tr>
+                <td className="table-cell text-center text-slate-500 py-6" colSpan={6}>
+                  No clients found. Try a different search.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
-
-      {filtered.length === 0 ? (
-        <p className="text-slate-500 text-sm">No clients found.</p>
-      ) : (
-        <div className="flex flex-col gap-3">
-          {filtered.map((c) => (
-            <div
-              key={c.id}
-              className="p-3 border border-bg-border rounded-lg flex items-center justify-between"
-            >
-              <div>
-                <p className="text-white font-medium">{c.name}</p>
-                <p className="text-xs text-slate-500">{c.createdAt}</p>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <span className="text-xs px-2 py-1 rounded bg-brand-500/20 text-brand-400 capitalize">
-                  {c.status}
-                </span>
-                <button
-                  className="text-slate-400 hover:text-slate-100"
-                  onClick={() => openEdit(c)}
-                >
-                  <Edit2 size={15} />
-                </button>
-                <button
-                  className="text-red-500 hover:text-red-400"
-                  onClick={() => handleDelete(c.id)}
-                >
-                  <Trash2 size={15} />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {modalOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="card w-full max-w-sm p-5 relative">
-            <button
-              className="absolute right-3 top-3 text-slate-500 hover:text-slate-300"
-              onClick={() => setModalOpen(false)}
-            >
-              <X size={16} />
-            </button>
-
-            <h3 className="text-white font-semibold mb-4">
-              {editing ? "Edit client" : "Add client"}
-            </h3>
-
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              <div>
-                <label className="label">Name</label>
-                <input
-                  className="input"
-                  value={form.name}
-                  onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="label">Status</label>
-                <select
-                  className="input"
-                  value={form.status}
-                  onChange={(e) => setForm((p) => ({ ...p, status: e.target.value }))}
-                >
-                  <option value="active">Active</option>
-                  <option value="prospect">Prospect</option>
-                  <option value="inactive">Inactive</option>
-                </select>
-              </div>
-
-              <button type="submit" className="btn-primary justify-center">
-                {editing ? "Save changes" : "Create client"}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
