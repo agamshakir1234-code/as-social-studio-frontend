@@ -12,6 +12,10 @@ import {
   MoreHorizontal,
 } from "lucide-react"
 
+// =========================
+// INITIAL CLIENTS (FULL)
+// =========================
+
 const INITIAL_CLIENTS = [
   {
     id: 1,
@@ -20,8 +24,66 @@ const INITIAL_CLIENTS = [
     status: "Active",
     platforms: ["Instagram", "Facebook"],
     monthlyBudget: "$1,800",
-    notes: "High engagement on reels.",
+    notes: "High engagement on reels. Best performing content: workout reels.",
+
+    activity: [
+      {
+        id: 1,
+        type: "call",
+        date: "2026-04-01",
+        note: "Intro call. Discussed content package and monthly retainer."
+      },
+      {
+        id: 2,
+        type: "proposal",
+        date: "2026-04-02",
+        note: "Sent proposal for 3-month content + ads package."
+      },
+      {
+        id: 3,
+        type: "meeting",
+        date: "2026-04-05",
+        note: "Strategy meeting. Agreed to focus on Reels + Stories."
+      }
+    ],
+
+    campaigns: [
+      {
+        id: 1,
+        name: "Spring Promo",
+        status: "Running",
+        budget: "$900",
+        platform: "Instagram",
+        startDate: "2026-04-01",
+        endDate: "2026-04-30"
+      },
+      {
+        id: 2,
+        name: "Summer Shred",
+        status: "Planned",
+        budget: "$1,200",
+        platform: "Instagram",
+        startDate: "2026-06-01",
+        endDate: "2026-06-30"
+      }
+    ],
+
+    files: [
+      {
+        id: 1,
+        name: "UrbanFit_Contract.pdf",
+        type: "contract",
+        uploadedAt: "2026-04-01"
+      },
+      {
+        id: 2,
+        name: "Brand_Guidelines.png",
+        type: "brand",
+        uploadedAt: "2026-04-03"
+      }
+    ]
   },
+
   {
     id: 2,
     name: "GreenLeaf Organics",
@@ -29,8 +91,39 @@ const INITIAL_CLIENTS = [
     status: "Onboarding",
     platforms: ["Instagram"],
     monthlyBudget: "$1,200",
-    notes: "Launching new vegan menu.",
+    notes: "Launching new vegan menu. Needs strong visual identity.",
+
+    activity: [
+      {
+        id: 1,
+        type: "meeting",
+        date: "2026-04-02",
+        note: "Kickoff meeting. Discussed brand tone and content pillars."
+      }
+    ],
+
+    campaigns: [
+      {
+        id: 1,
+        name: "Vegan Bowl Launch",
+        status: "Running",
+        budget: "$600",
+        platform: "Instagram",
+        startDate: "2026-04-05",
+        endDate: "2026-04-20"
+      }
+    ],
+
+    files: [
+      {
+        id: 1,
+        name: "Menu_Photos.zip",
+        type: "assets",
+        uploadedAt: "2026-04-02"
+      }
+    ]
   },
+
   {
     id: 3,
     name: "Nova Tech",
@@ -38,9 +131,43 @@ const INITIAL_CLIENTS = [
     status: "Paused",
     platforms: ["Instagram", "YouTube"],
     monthlyBudget: "$2,500",
-    notes: "Paused due to internal restructuring.",
-  },
+    notes: "Paused due to internal restructuring. Expected to resume in June.",
+
+    activity: [
+      {
+        id: 1,
+        type: "email",
+        date: "2026-03-28",
+        note: "Client notified about temporary pause."
+      }
+    ],
+
+    campaigns: [
+      {
+        id: 1,
+        name: "Productivity Tips Series",
+        status: "Paused",
+        budget: "$1,000",
+        platform: "YouTube",
+        startDate: "2026-03-01",
+        endDate: "2026-03-31"
+      }
+    ],
+
+    files: [
+      {
+        id: 1,
+        name: "NovaTech_BrandAssets.zip",
+        type: "assets",
+        uploadedAt: "2026-03-10"
+      }
+    ]
+  }
 ]
+
+// =========================
+// UI HELPERS
+// =========================
 
 function StatusBadge({ status }) {
   const map = {
@@ -74,6 +201,10 @@ function PlatformIcons({ platforms }) {
   )
 }
 
+// =========================
+// MAIN COMPONENT
+// =========================
+
 export default function Clients() {
   const [clients, setClients] = useState(INITIAL_CLIENTS)
 
@@ -92,6 +223,9 @@ export default function Clients() {
       {
         id: Date.now(),
         ...client,
+        activity: [],
+        campaigns: [],
+        files: [],
       },
     ])
   }
