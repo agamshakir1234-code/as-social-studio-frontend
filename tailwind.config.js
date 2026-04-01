@@ -11,13 +11,10 @@ export default {
       },
       colors: {
         bg: {
-          base: "var(--bg-base)",
-          card: "var(--bg-card)",
-          hover: "var(--bg-hover)",
-          border: "var(--bg-border)",
-        },
-        text: {
-          base: "var(--text-base)",
+          base:  '#080c14',
+          card:  '#0d1221',
+          hover: '#111827',
+          border: '#1e2a3a',
         },
         brand: {
           50:  '#eef2ff',
@@ -37,4 +34,3 @@ export default {
   },
   plugins: [],
 }
-
