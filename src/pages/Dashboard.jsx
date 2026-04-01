@@ -1,96 +1,191 @@
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  Legend
-} from "recharts"
-
-const growthData = [
-  { month: "Jan", value: 12 },
-  { month: "Feb", value: 18 },
-  { month: "Mar", value: 25 },
-  { month: "Apr", value: 22 },
-  { month: "May", value: 31 },
-  { month: "Jun", value: 40 }
-]
-
-const postsData = [
-  { status: "Published", value: 32 },
-  { status: "Scheduled", value: 14 },
-  { status: "Draft", value: 9 }
-]
-
-const platformData = [
-  { name: "Instagram", value: 45 },
-  { name: "Facebook", value: 25 },
-  { name: "TikTok", value: 20 },
-  { name: "LinkedIn", value: 10 }
-]
-
-const COLORS = ["#6366f1", "#22c55e", "#f97316", "#e11d48"]
+import { useAuth } from "@/context/AuthContext"
+import { TrendingUp, Users, Calendar, Target, Activity, Star } from "lucide-react"
 
 export default function Dashboard() {
+  const { user } = useAuth()
+
+  const userRole = user?.role || "Standard"
+  const userName = user?.name || "Creator"
+
   return (
-    <div className="grid gap-6 md:grid-cols-2">
-      <div className="card p-6 col-span-2">
-        <h2 className="section-title mb-4">Monthly growth</h2>
-        <ResponsiveContainer width="100%" height={260}>
-          <LineChart data={growthData}>
-            <XAxis dataKey="month" stroke="#64748b" />
-            <YAxis stroke="#64748b" />
-            <Tooltip />
-            <Line
-              type="monotone"
-              dataKey="value"
-              stroke="#6366f1"
-              strokeWidth={3}
-              dot={{ r: 4 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+    <div className="space-y-6 animate-fade-in">
 
-      <div className="card p-6">
-        <h2 className="section-title mb-4">Posts by status</h2>
-        <ResponsiveContainer width="100%" height={220}>
-          <BarChart data={postsData}>
-            <XAxis dataKey="status" stroke="#64748b" />
-            <YAxis stroke="#64748b" />
-            <Tooltip />
-            <Bar dataKey="value" fill="#22c55e" radius={[4, 4, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+      {/* כותרת עליונה */}
+      <header className="flex items-center justify-between gap-4">
+        <div>
+          <h1 className="page-title flex items-center gap-2">
+            Welcome back, {userName}
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-brand-500/10 text-brand-400 border border-brand-500/30">
+              <Star size={12} />
+              {userRole}
+            </span>
+          </h1>
+          <p className="text-sm text-slate-400 mt-1">
+            Here’s a quick overview of your social performance and pipeline.
+          </p>
+        </div>
 
-      <div className="card p-6">
-        <h2 className="section-title mb-4">Top platforms</h2>
-        <ResponsiveContainer width="100%" height={220}>
-          <PieChart>
-            <Pie
-              data={platformData}
-              dataKey="value"
-              nameKey="name"
-              innerRadius={50}
-              outerRadius={80}
-              paddingAngle={3}
-            >
-              {platformData.map((entry, index) => (
-                <Cell key={entry.name} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
+        <div className="flex items-center gap-3">
+          <div className="hidden md:flex flex-col items-end text-xs text-slate-400">
+            <span>Today</span>
+            <span className="text-slate-300 font-medium">Content & Leads Overview</span>
+          </div>
+        </div>
+      </header>
+
+      {/* סטטיסטיקות עליונות */}
+      <section className="grid grid-cols-1 md:grid-cols-4 gap-4 stagger">
+        <div className="stat-card">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">
+              Total Clients
+            </span>
+            <Users size={16} className="text-brand-400" />
+          </div>
+          <div className="flex items-end justify-between mt-2">
+            <span className="text-2xl font-semibold text-white">32</span>
+            <span className="text-xs text-emerald-400 flex items-center gap-1">
+              <TrendingUp size={12} />
+              +8 this month
+            </span>
+          </div>
+          <p className="text-xs text-slate-500 mt-2">
+            Active retainers and one-time projects.
+          </p>
+        </div>
+
+        <div className="stat-card">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">
+              Scheduled Posts
+            </span>
+            <Calendar size={16} className="text-brand-400" />
+          </div>
+          <div className="flex items-end justify-between mt-2">
+            <span className="text-2xl font-semibold text-white">18</span>
+            <span className="text-xs text-sky-400">
+              Next 7 days
+            </span>
+          </div>
+          <p className="text-xs text-slate-500 mt-2">
+            Across all platforms and clients.
+          </p>
+        </div>
+
+        <div className="stat-card">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">
+              New Leads
+            </span>
+            <Target size={16} className="text-brand-400" />
+          </div>
+          <div className="flex items-end justify-between mt-2">
+            <span className="text-2xl font-semibold text-white">9</span>
+            <span className="text-xs text-amber-400">
+              3 high intent
+            </span>
+          </div>
+          <p className="text-xs text-slate-500 mt-2">
+            From inbound forms and campaigns.
+          </p>
+        </div>
+
+        <div className="stat-card">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">
+              Engagement Rate
+            </span>
+            <Activity size={16} className="text-brand-400" />
+          </div>
+          <div className="flex items-end justify-between mt-2">
+            <span className="text-2xl font-semibold text-white">4.8%</span>
+            <span className="text-xs text-emerald-400">
+              +0.6% vs last week
+            </span>
+          </div>
+          <p className="text-xs text-slate-500 mt-2">
+            Average across all active campaigns.
+          </p>
+        </div>
+      </section>
+
+      {/* אזור תחתון: פייפליין + פעילות אחרונה */}
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        {/* פייפליין לידים */}
+        <div className="card p-5 flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <h2 className="section-title">Leads pipeline</h2>
+            <span className="text-xs text-slate-500">This week</span>
+          </div>
+
+          <div className="space-y-3">
+            {[
+              { stage: "Discovery", count: 5, color: "bg-sky-500/20 text-sky-300 border-sky-500/30" },
+              { stage: "Proposal sent", count: 3, color: "bg-amber-500/20 text-amber-300 border-amber-500/30" },
+              { stage: "Closed won", count: 2, color: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30" },
+            ].map((item) => (
+              <div
+                key={item.stage}
+                className="flex items-center justify-between rounded-lg border border-bg-border bg-bg-hover/40 px-3 py-2.5"
+              >
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium text-slate-100">{item.stage}</span>
+                  <span className="text-xs text-slate-500">Social & content retainers</span>
+                </div>
+                <span className={`badge ${item.color}`}>
+                  {item.count} leads
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* פעילות אחרונה */}
+        <div className="card p-5 flex flex-col gap-4 lg:col-span-2">
+          <div className="flex items-center justify-between">
+            <h2 className="section-title">Recent activity</h2>
+            <span className="text-xs text-slate-500">Last 24 hours</span>
+          </div>
+
+          <div className="space-y-3">
+            {[
+              {
+                title: "New content plan approved",
+                client: "Urban Fit Studio",
+                type: "Content",
+                time: "2 hours ago",
+              },
+              {
+                title: "Lead moved to proposal stage",
+                client: "GreenLeaf Organics",
+                type: "Lead",
+                time: "5 hours ago",
+              },
+              {
+                title: "Reels campaign performance updated",
+                client: "Nova Tech",
+                type: "Performance",
+                time: "Yesterday",
+              },
+            ].map((item, idx) => (
+              <div
+                key={idx}
+                className="flex items-center justify-between rounded-lg border border-bg-border bg-bg-hover/30 px-3 py-2.5"
+              >
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium text-slate-100">
+                    {item.title}
+                  </span>
+                  <span className="text-xs text-slate-500">
+                    {item.client} • {item.type}
+                  </span>
+                </div>
+                <span className="text-xs text-slate-500">{item.time}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   )
 }
