@@ -10,7 +10,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-6 animate-fade-in">
 
-      {/* כותרת עליונה */}
+      {/* Header */}
       <header className="flex items-center justify-between gap-4">
         <div>
           <h1 className="page-title flex items-center gap-2">
@@ -21,19 +21,12 @@ export default function Dashboard() {
             </span>
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Here’s a quick overview of your social performance and pipeline.
+            Social Engine overview and performance insights.
           </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <div className="hidden md:flex flex-col items-end text-xs text-slate-400">
-            <span>Today</span>
-            <span className="text-slate-300 font-medium">Content & Leads Overview</span>
-          </div>
         </div>
       </header>
 
-      {/* סטטיסטיקות עליונות */}
+      {/* KPIs */}
       <section className="grid grid-cols-1 md:grid-cols-4 gap-4 stagger">
         <div className="stat-card">
           <div className="flex items-center justify-between">
@@ -49,9 +42,6 @@ export default function Dashboard() {
               +8 this month
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-2">
-            Active retainers and one-time projects.
-          </p>
         </div>
 
         <div className="stat-card">
@@ -63,13 +53,8 @@ export default function Dashboard() {
           </div>
           <div className="flex items-end justify-between mt-2">
             <span className="text-2xl font-semibold text-white">18</span>
-            <span className="text-xs text-sky-400">
-              Next 7 days
-            </span>
+            <span className="text-xs text-sky-400">Next 7 days</span>
           </div>
-          <p className="text-xs text-slate-500 mt-2">
-            Across all platforms and clients.
-          </p>
         </div>
 
         <div className="stat-card">
@@ -81,13 +66,8 @@ export default function Dashboard() {
           </div>
           <div className="flex items-end justify-between mt-2">
             <span className="text-2xl font-semibold text-white">9</span>
-            <span className="text-xs text-amber-400">
-              3 high intent
-            </span>
+            <span className="text-xs text-amber-400">3 high intent</span>
           </div>
-          <p className="text-xs text-slate-500 mt-2">
-            From inbound forms and campaigns.
-          </p>
         </div>
 
         <div className="stat-card">
@@ -99,25 +79,16 @@ export default function Dashboard() {
           </div>
           <div className="flex items-end justify-between mt-2">
             <span className="text-2xl font-semibold text-white">4.8%</span>
-            <span className="text-xs text-emerald-400">
-              +0.6% vs last week
-            </span>
+            <span className="text-xs text-emerald-400">+0.6% vs last week</span>
           </div>
-          <p className="text-xs text-slate-500 mt-2">
-            Average across all active campaigns.
-          </p>
         </div>
       </section>
 
-      {/* אזור תחתון: פייפליין + פעילות אחרונה */}
+      {/* Pipeline + Activity */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* פייפליין לידים */}
+        {/* Pipeline */}
         <div className="card p-5 flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <h2 className="section-title">Leads pipeline</h2>
-            <span className="text-xs text-slate-500">This week</span>
-          </div>
-
+          <h2 className="section-title">Leads pipeline</h2>
           <div className="space-y-3">
             {[
               { stage: "Discovery", count: 5, color: "bg-sky-500/20 text-sky-300 border-sky-500/30" },
@@ -130,7 +101,7 @@ export default function Dashboard() {
               >
                 <div className="flex flex-col">
                   <span className="text-sm font-medium text-slate-100">{item.stage}</span>
-                  <span className="text-xs text-slate-500">Social & content retainers</span>
+                  <span className="text-xs text-slate-500">Social Engine lead</span>
                 </div>
                 <span className={`badge ${item.color}`}>
                   {item.count} leads
@@ -140,13 +111,9 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* פעילות אחרונה */}
+        {/* Recent Activity */}
         <div className="card p-5 flex flex-col gap-4 lg:col-span-2">
-          <div className="flex items-center justify-between">
-            <h2 className="section-title">Recent activity</h2>
-            <span className="text-xs text-slate-500">Last 24 hours</span>
-          </div>
-
+          <h2 className="section-title">Recent activity</h2>
           <div className="space-y-3">
             {[
               {
@@ -189,4 +156,3 @@ export default function Dashboard() {
     </div>
   )
 }
-
