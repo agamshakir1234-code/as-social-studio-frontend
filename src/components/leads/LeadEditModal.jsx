@@ -1,24 +1,24 @@
 import LeadModal from "./LeadModal"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
-export default function LeadCreateModal({ open, onClose, onCreate }) {
-  const [form, setForm] = useState({
-    name: "",
-    company: "",
-    source: "",
-    priority: "Medium",
-    note: "",
-  })
+export default function LeadEditModal({ open, onClose, lead, onSave }) {
+  const [form, setForm] = useState(lead)
+
+  useEffect(() => {
+    setForm(lead)
+  }, [lead])
+
+  if (!lead) return null
 
   const update = (key, value) => setForm({ ...form, [key]: value })
 
   const submit = () => {
-    onCreate(form)
+    onSave(form)
     onClose()
   }
 
   return (
-    <LeadModal open={open} onClose={onClose} title="New Lead">
+    <LeadModal open={open} onClose={onClose} title="Edit Lead">
       <div className="space-y-3">
 
         <div>
@@ -27,7 +27,6 @@ export default function LeadCreateModal({ open, onClose, onCreate }) {
             className="input"
             value={form.name}
             onChange={(e) => update("name", e.target.value)}
-            placeholder="John Doe"
           />
         </div>
 
@@ -37,7 +36,6 @@ export default function LeadCreateModal({ open, onClose, onCreate }) {
             className="input"
             value={form.company}
             onChange={(e) => update("company", e.target.value)}
-            placeholder="Brand / Business name"
           />
         </div>
 
@@ -48,7 +46,6 @@ export default function LeadCreateModal({ open, onClose, onCreate }) {
             value={form.source}
             onChange={(e) => update("source", e.target.value)}
           >
-            <option value="">Select source</option>
             <option>Instagram DM</option>
             <option>Facebook</option>
             <option>Website form</option>
@@ -76,16 +73,14 @@ export default function LeadCreateModal({ open, onClose, onCreate }) {
             className="input h-24"
             value={form.note}
             onChange={(e) => update("note", e.target.value)}
-            placeholder="Add context about the lead..."
           />
         </div>
 
         <button onClick={submit} className="btn-primary w-full mt-2">
-          Create lead
+          Save changes
         </button>
 
       </div>
     </LeadModal>
   )
 }
-
