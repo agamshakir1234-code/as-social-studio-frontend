@@ -9,8 +9,13 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     const root = document.documentElement
-    root.classList.remove("light", "dark")
-    root.classList.add(theme)
+    if (theme === "dark") {
+      root.classList.add("dark")
+      root.classList.remove("light")
+    } else {
+      root.classList.add("light")
+      root.classList.remove("dark")
+    }
     localStorage.setItem("theme", theme)
   }, [theme])
 
@@ -26,3 +31,4 @@ export function ThemeProvider({ children }) {
 }
 
 export const useTheme = () => useContext(ThemeContext)
+
