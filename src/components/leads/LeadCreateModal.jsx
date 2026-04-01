@@ -1,27 +1,90 @@
-import { X } from "lucide-react"
+import LeadModal from "./LeadModal"
+import { useState } from "react"
 
-export default function LeadModal({ open, onClose, title, children }) {
-  if (!open) return null
+export default function LeadCreateModal({ open, onClose, onCreate }) {
+  const [form, setForm] = useState({
+    name: "",
+    company: "",
+    source: "",
+    priority: "Medium",
+    note: "",
+  })
+
+  const update = (key, value) => setForm({ ...form, [key]: value })
+
+  const submit = () => {
+    onCreate(form)
+    onClose()
+  }
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in">
-      <div className="bg-bg-card border border-bg-border rounded-xl w-full max-w-lg p-6 shadow-xl animate-slide-in">
-        
-        {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-text-base">{title}</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-200">
-            <X size={20} />
-          </button>
+    <LeadModal open={open} onClose={onClose} title="New Lead">
+      <div className="space-y-3">
+
+        <div>
+          <label className="label">Full name</label>
+          <input
+            className="input"
+            value={form.name}
+            onChange={(e) => update("name", e.target.value)}
+            placeholder="John Doe"
+          />
         </div>
 
-        {/* Content */}
-        <div className="space-y-4">
-          {children}
+        <div>
+          <label className="label">Company</label>
+          <input
+            className="input"
+            value={form.company}
+            onChange={(e) => update("company", e.target.value)}
+            placeholder="Brand / Business name"
+          />
         </div>
+
+        <div>
+          <label className="label">Lead source</label>
+          <select
+            className="input"
+            value={form.source}
+            onChange={(e) => update("source", e.target.value)}
+          >
+            <option value="">Select source</option>
+            <option>Instagram DM</option>
+            <option>Facebook</option>
+            <option>Website form</option>
+            <option>Referral</option>
+            <option>WhatsApp</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="label">Priority</label>
+          <select
+            className="input"
+            value={form.priority}
+            onChange={(e) => update("priority", e.target.value)}
+          >
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="label">Notes</label>
+          <textarea
+            className="input h-24"
+            value={form.note}
+            onChange={(e) => update("note", e.target.value)}
+            placeholder="Add context about the lead..."
+          />
+        </div>
+
+        <button onClick={submit} className="btn-primary w-full mt-2">
+          Create lead
+        </button>
 
       </div>
-    </div>
+    </LeadModal>
   )
 }
-
