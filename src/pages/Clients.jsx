@@ -1,7 +1,18 @@
-import { useState } from "react"
-import { Search, Instagram, Facebook, Youtube, MoreHorizontal } from "lucide-react"
+import { useState, useMemo } from "react"
+import ClientCreateModal from "@/components/clients/ClientCreateModal"
+import ClientEditModal from "@/components/clients/ClientEditModal"
+import ClientViewModal from "@/components/clients/ClientViewModal"
 
-const MOCK_CLIENTS = [
+import {
+  Search,
+  Instagram,
+  Facebook,
+  Youtube,
+  Hash,
+  MoreHorizontal,
+} from "lucide-react"
+
+const INITIAL_CLIENTS = [
   {
     id: 1,
     name: "Urban Fit Studio",
@@ -9,6 +20,7 @@ const MOCK_CLIENTS = [
     status: "Active",
     platforms: ["Instagram", "Facebook"],
     monthlyBudget: "$1,800",
+    notes: "High engagement on reels.",
   },
   {
     id: 2,
@@ -17,6 +29,7 @@ const MOCK_CLIENTS = [
     status: "Onboarding",
     platforms: ["Instagram"],
     monthlyBudget: "$1,200",
+    notes: "Launching new vegan menu.",
   },
   {
     id: 3,
@@ -25,6 +38,7 @@ const MOCK_CLIENTS = [
     status: "Paused",
     platforms: ["Instagram", "YouTube"],
     monthlyBudget: "$2,500",
+    notes: "Paused due to internal restructuring.",
   },
 ]
 
@@ -33,34 +47,85 @@ function StatusBadge({ status }) {
     Active: "bg-emerald-500/10 text-emerald-300 border-emerald-500/30",
     Onboarding: "bg-sky-500/10 text-sky-300 border-sky-500/30",
     Paused: "bg-amber-500/10 text-amber-300 border-amber-500/30",
+    Lost: "bg-red-500/10 text-red-300 border-red-500/30",
   }
+
   return (
-    <span className={`badge border ${map[status] || "bg-slate-500/10 text-slate-300 border-slate-500/30"}`}>
+    <span className={`badge border ${map[status] || ""}`}>
       {status}
     </span>
   )
 }
 
 function PlatformIcons({ platforms }) {
+  const icons = {
+    Instagram: <Instagram size={16} />,
+    Facebook: <Facebook size={16} />,
+    YouTube: <Youtube size={16} />,
+    TikTok: <Hash size={16} />,
+  }
+
   return (
     <div className="flex items-center gap-1 text-slate-400">
-      {platforms.includes("Instagram") && <Instagram size={16} />}
-      {platforms.includes("Facebook") && <Facebook size={16} />}
-      {platforms.includes("YouTube") && <Youtube size={16} />}
+      {platforms.map((p) => (
+        <span key={p}>{icons[p]}</span>
+      ))}
     </div>
   )
 }
 
 export default function Clients() {
-  const [query, setQuery] = useState("")
+  const [clients, setClients] = useState(INITIAL_CLIENTS)
 
-  const filtered = MOCK_CLIENTS.filter((c) =>
-    c.name.toLowerCase().includes(query.toLowerCase())
-  )
+  const [createOpen, setCreateOpen] = useState(false)
+  const [editOpen, setEditOpen] = useState(false)
+  const [viewOpen, setViewOpen] = useState(false)
+
+  const [selectedClient, setSelectedClient] = useState(null)
+
+  const [search, setSearch] = useState("")
+  const [filterStatus, setFilterStatus] = useState("All")
+
+  const addClient = (client) => {
+    setClients([
+      ...clients,
+      {
+        id: Date.now(),
+        ...client,
+      },
+    ])
+  }
+
+  const saveClient = (updated) => {
+    setClients(clients.map((c) => (c.id === updated.id ? updated : c)))
+  }
+
+  const openEdit = (client) => {
+    setSelectedClient(client)
+    setEditOpen(true)
+  }
+
+  const openView = (client) => {
+    setSelectedClient(client)
+    setViewOpen(true)
+  }
+
+  const filteredClients = useMemo(() => {
+    return clients.filter((client) => {
+      const text = `${client.name} ${client.industry} ${client.notes}`.toLowerCase()
+      const matchesSearch = text.includes(search.toLowerCase())
+      const matchesStatus =
+        filterStatus === "All" ? true : client.status === filterStatus
+
+      return matchesSearch && matchesStatus
+    })
+  }, [clients, search, filterStatus])
 
   return (
     <div className="space-y-5">
-      <header className="flex items-center justify-between gap-4">
+
+      {/* Header */}
+      <header className="flex items-center justify-between">
         <div>
           <h1 className="page-title">Clients</h1>
           <p className="text-sm text-slate-400">
@@ -68,23 +133,53 @@ export default function Clients() {
           </p>
         </div>
 
-        <button className="btn-primary">
+        <button
+          onClick={() => setCreateOpen(true)}
+          className="btn-primary"
+        >
           + Add client
         </button>
       </header>
 
-      <div className="card p-4 flex items-center gap-3">
-        <div className="relative flex-1">
-          <Search size={16} className="absolute left-3 top-2.5 text-slate-500" />
+      {/* Filters */}
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+        {/* Search */}
+        <div className="card p-4 flex items-center gap-3">
+          <Search size={16} className="text-slate-500" />
           <input
-            className="input pl-9"
-            placeholder="Search clients by name or industry..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            className="input"
+            placeholder="Search clients by name, industry or notes..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-      </div>
 
+        {/* Status filter */}
+        <div className="card p-4 flex items-center gap-3">
+          <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+            Status
+          </span>
+          <div className="flex flex-wrap gap-2">
+            {["All", "Active", "Onboarding", "Paused", "Lost"].map((s) => (
+              <button
+                key={s}
+                onClick={() => setFilterStatus(s)}
+                className={`px-3 py-1 rounded-full text-xs border transition-colors
+                  ${filterStatus === s
+                    ? "bg-brand-500/10 text-brand-300 border-brand-500/40"
+                    : "bg-bg-base text-slate-400 border-bg-border hover:bg-bg-hover"
+                  }`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        </div>
+
+      </section>
+
+      {/* Clients table */}
       <div className="card overflow-hidden">
         <table className="w-full text-sm">
           <thead>
@@ -97,42 +192,92 @@ export default function Clients() {
               <th className="table-head text-right">Actions</th>
             </tr>
           </thead>
+
           <tbody>
-            {filtered.map((client) => (
+            {filteredClients.map((client) => (
               <tr key={client.id} className="table-row">
+
                 <td className="table-cell font-medium text-slate-100">
                   {client.name}
                 </td>
+
                 <td className="table-cell text-slate-400">
                   {client.industry}
                 </td>
+
                 <td className="table-cell">
                   <StatusBadge status={client.status} />
                 </td>
+
                 <td className="table-cell">
                   <PlatformIcons platforms={client.platforms} />
                 </td>
+
                 <td className="table-cell">
                   {client.monthlyBudget}
                 </td>
+
                 <td className="table-cell text-right">
-                  <button className="text-slate-500 hover:text-slate-300">
-                    <MoreHorizontal size={16} />
-                  </button>
+                  <div className="flex items-center justify-end gap-2">
+
+                    <button
+                      onClick={() => openView(client)}
+                      className="btn-secondary text-xs px-3 py-1"
+                    >
+                      View
+                    </button>
+
+                    <button
+                      onClick={() => openEdit(client)}
+                      className="btn-secondary text-xs px-3 py-1"
+                    >
+                      Edit
+                    </button>
+
+                    <button className="text-slate-500 hover:text-slate-300">
+                      <MoreHorizontal size={16} />
+                    </button>
+
+                  </div>
                 </td>
+
               </tr>
             ))}
 
-            {filtered.length === 0 && (
+            {filteredClients.length === 0 && (
               <tr>
-                <td className="table-cell text-center text-slate-500 py-6" colSpan={6}>
-                  No clients found. Try a different search.
+                <td
+                  className="table-cell text-center text-slate-500 py-6"
+                  colSpan={6}
+                >
+                  No clients found with current filters.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+
+      {/* Modals */}
+      <ClientCreateModal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        onCreate={addClient}
+      />
+
+      <ClientEditModal
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        client={selectedClient}
+        onSave={saveClient}
+      />
+
+      <ClientViewModal
+        open={viewOpen}
+        onClose={() => setViewOpen(false)}
+        client={selectedClient}
+      />
+
     </div>
   )
 }
